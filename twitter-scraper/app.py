@@ -41,12 +41,12 @@ class StdoutListener(StreamListener):
         def on_eror(self, status):
             print(status)
 
-print(scraper_channel)
 
-# client.publish(scraper_channel, "{'asdasd':123}")                                 
-# if __name__ == '__main__':
-    # l = StdoutListener()
-    # auth = OAuthHandler(consumer_key, consumer_secret)
-    # auth.set_access_token(access_token, access_secret)
-    # stream = Stream(auth, l)
-    # stream.filter(track=['belum bekerja','kartu', 'prakerja'])
+
+
+if __name__ == '__main__':
+    l = StdoutListener()
+    auth = OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_secret)
+    stream = Stream(auth, l)
+    stream.filter(track=['belum bekerja','kartu', 'prakerja'])
