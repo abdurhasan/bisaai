@@ -42,11 +42,9 @@ class StdoutListener(StreamListener):
             print(status)
 
 
-
-
 if __name__ == '__main__':
     l = StdoutListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_secret)
     stream = Stream(auth, l)
-    stream.filter(track=['freshgraduate','kartu prakerja'])
+    stream.filter(track=scraper_words)
