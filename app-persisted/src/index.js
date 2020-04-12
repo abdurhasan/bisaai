@@ -29,12 +29,12 @@ initializeDatabases().then(DB => {
 
         if (IsValidJSONString(metaData)) {
             const _dataTweet = JSON.parse(metaData)
-            _datum['_id'] = _dataTweet['id'] || ObjectID()
+            _datum['_id'] = Number(_dataTweet['id'] )
             _datum['user'] = _dataTweet.user.screen_name
-            _datum['followers'] = _dataTweet.user.followers_count
+            _datum['followers'] = Number(_dataTweet.user.followers_count)
             _datum['tweet'] = _dataTweet.hasOwnProperty('extended_tweet') ? _dataTweet.extended_tweet.full_text : _dataTweet.text
             _datum['label'] = ""
-            _datum['time'] = _dataTweet['timestamp_ms']
+            _datum['time'] = Number(_dataTweet['timestamp_ms'])
 
             DB.insertOne(_datum)
                 .then(

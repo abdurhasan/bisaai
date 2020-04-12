@@ -1,39 +1,41 @@
 const mquery = require('mquery')
 const print = console.log
-const { arrayKeyObject } = require('@helper')
-
+const isEmpty = require('is-empty')
 
 
 
 module.exports = function (app, dbs) {
-    const Query = mquery(dbs)
-    const defaultSelect = { user: 1, timestamp_ms: 1, label: 1, text: 1 }
-
-    app.get('/', async (req, res) => {
-        const { detail, id, select } = req.query
-
-        // let selectOption = select ? arrayKeyObject(select.split(','), 1) : defaultSelect
-        if (detail == 'true') selectOption = {}
-
-
-        // let result = new Array
-        let rows = await Query.select({}).find({})
-
-        // rows = rows.map(rw => {
-        //     const _datum = {}
-        //     _datum['_id'] = rw['_id'] 
-        //     _datum['user'] = rw.user.screen_name
-        //     _datum['followers'] = rw.user.followers_count
-        //     _datum['tweet'] = rw.hasOwnProperty('extended_tweet') ? rw.extended_tweet.full_text : rw.text
-        //     _datum['label'] = rw.label
-        //     _datum['time'] = rw['timestamp_ms']
-
-        //     return _datum
-
-        // })
 
 
 
+    app.get('/:collectionDB', async (req, res) => {
+        const { collectionDB } = req.params
+        let { select, skip, limit, search, equal, gte, gt, lte, lt, like } = req.query
+        
+        select = isEmpty(select) ? {} : select.replace(/,/g, ' ')
+        search = isEmpty(search) ? {} : search.trim()
+
+        skip = skip ? Number(skip) : 0
+        limit = limit ? Number(limit) : 50
+
+        let Query = mquery(dbs.collection(collectionDB))
+        const searchRes = {}
+
+        if (search) {
+            let _search = {}
+
+            if (!isNaN(gte)) _search['$gte'] = Number(gte)
+            if (!isNaN(gt)) _search['$gt'] = Number(gt)
+            if (!isNaN(lte)) _search['$lte'] = Number(lte)
+            if (!isNaN(lt)) _search['$lt'] = Number(lt)
+            if (!isNaN(equal)) _search = Number(equal)
+            if (like) _search = new RegExp(`^${like}`, 'i')
+
+            if (!isEmpty(_search)) searchRes[search] = _search
+
+        }
+                
+        const rows = await Query.find(searchRes).skip(skip).limit(limit).select(select)
 
         res.json(rows)
 

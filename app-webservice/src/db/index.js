@@ -9,7 +9,7 @@ require('dotenv').config()
 
 module.exports = function () {
     return MongoClient.connect(mongoURI, { useUnifiedTopology: true })
-        .then(client => Promise.resolve(client.db(mongoDatabase).collection(mongoCollection)))
+        .then(client => Promise.resolve(client.db(mongoDatabase)))
         .catch(err => Promise.reject(err))
 
 }
