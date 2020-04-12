@@ -10,7 +10,7 @@ const redis = new Redis({
 });
 const channel = process.env.SCRAPER_CHANNEL;
 const initializeDatabases = require('@database')
-const ObjectID = require("bson-objectid").generate
+const ObjectID = require('bson-objectid').generate
 
 
 redis.subscribe(channel, (error, count) => {
@@ -25,19 +25,26 @@ redis.subscribe(channel, (error, count) => {
 initializeDatabases().then(DB => {
 
     redis.on('message', async (channel, metaData) => {
-
+        const _datum = new Object
 
         if (IsValidJSONString(metaData)) {
-            let _dataTweet = JSON.parse(metaData)
-            _dataTweet['_id'] = _dataTweet['id'] || ObjectID()
-            _dataTweet['label'] = " "
-            delete _dataTweet['id']
-            delete _dataTweet['id_str']
+            const _dataTweet = JSON.parse(metaData)
+            _datum['_id'] = _dataTweet['id'] || ObjectID()
+            _datum['user'] = _dataTweet.user.screen_name
+            _datum['followers'] = _dataTweet.user.followers_count
+            _datum['tweet'] = _dataTweet.hasOwnProperty('extended_tweet') ? _dataTweet.extended_tweet.full_text : _dataTweet.text
+            _datum['label'] = ""
+            _datum['time'] = _dataTweet['timestamp_ms']
 
-            const saveData = await DB.insertOne(_dataTweet)
+            DB.insertOne(_datum)
+                .then(
+                    () => {
+                        console.log('data has been saved')
+                        delete _dataTweet
+                    }
+                )
+                .catch(err => console.log(err))
 
-
-            console.log(saveData)
         }
 
 

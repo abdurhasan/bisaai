@@ -24,7 +24,10 @@ redis_port = int(os.getenv("REDIS_PORT"))
 client = Client(host=redis_host,port=redis_port)
 
 scraper_channel = os.getenv("SCRAPER_CHANNEL")
-scraper_words = os.getenv("SCRAPER_WORDS").split(',')
+scraper_words = [ x.strip() for x in os.getenv("SCRAPER_WORDS").split(",")]
+
+
+
 
 class StdoutListener(StreamListener):
     def on_data(self, data):
