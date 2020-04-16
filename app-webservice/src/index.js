@@ -10,7 +10,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 
 initializeDatabases().then(dbs => {
-
+    console.log('DB is conneced')    
     app.use(cors())
     app.use(bodyParser())
     routes(app, dbs).listen(port, () => console.log(`Listening on port http://localhost:${port}`))

@@ -23,7 +23,7 @@ redis.subscribe(channel, (error, count) => {
 
 
 initializeDatabases().then(DB => {
-
+    console.log('DB IS CONNECTED')
     redis.on('message', async (channel, metaData) => {
         const _datum = new Object
 
