@@ -1,25 +1,22 @@
-require('dotenv').config()
-require('module-alias/register')
-
-const express = require('express')
-const app = express()
-const initializeDatabases = require('@database')
-const routes = require('@routes')
-const port = process.env.APP_PORT_WEBSERVICE || 8000
-const cors = require('cors')
-const bodyParser = require('body-parser')
-
-initializeDatabases().then(dbs => {
-    console.log('DB is conneced')    
-    app.use(cors())
-    app.use(bodyParser())
-    routes(app, dbs).listen(port, () => console.log(`Listening on port http://localhost:${port}`))
-
-}).catch(err => {
-    console.error('Failed to make all database connections!')
-    console.error(err)
-    process.exit(1)
-})
+const server = require('./server')
+const cluster = require('cluster');
+const numWorkers = require('os').cpus().length;
 
 
+if (cluster.isMaster) {
+    for (let i = 0; i < numWorkers; i++) {
+        cluster.fork();
+    }
 
+    cluster.on('online', function (worker) {
+        console.log('Worker ' + worker.process.pid + ' is online');
+    });
+
+    cluster.on('exit', function (worker, code, signal) {
+        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+        console.log('Starting a new worker');
+        cluster.fork();
+    });
+} else {
+    server()
+}

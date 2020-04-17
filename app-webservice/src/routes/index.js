@@ -6,7 +6,7 @@ const isEmpty = require('is-empty')
 
 module.exports = function (app, dbs) {
 
-    app.get('/', (req, res) => res.json({ message: 'welcome to Bisa Ai' }))
+    app.get('/', (req, res) => res.json({ message: 'welcome to Bisa Ai', pid : process.pid }))
 
     app.get('/:collectionDB', async (req, res) => {
         const { collectionDB } = req.params
