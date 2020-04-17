@@ -20,6 +20,9 @@
     "mongodb": "^3.5.5",
     "mquery": "^3.2.2"
   },
+  "engines": {
+    "node": "8.x"
+  },
   "_moduleAliases": {
     "@root": ".",
     "@database": "src/db",
