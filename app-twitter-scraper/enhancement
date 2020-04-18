@@ -1,0 +1,23 @@
+
+
+
+
+Asssalamualaikum warahtumallah 
+selamat siang dewan juri
+nama saya hasan
+saya akan mempresentasikan project kompetisi data engineering
+yang kami beri judul seeking the twitland response by implementing microservice
+
+
+ide project ini kami ingin mengambil data dari sosmed ,dalam hal ini twitter , 
+yang diasumsikan akan digunakan data scientist untuk membuat model sentimen analisis
+
+
+
+
+Project Enhancement : 
+
+
+- Scheduler in scraping    | multi thread
+- Implementing apache spark for data lake
+- providing for another socmed API , ex : instagram ,facebook

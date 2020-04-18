@@ -1,18 +1,15 @@
 const app = require('./app')
-const cluster = require('cluster');
-const numWorkers = require('os').cpus().length;
+const numWorkers = require('os').cpus().length - 1;
 
 
-if (cluster.isMaster) {
-    for (let i = 0; i < numWorkers; i++) {
-        cluster.fork();
+const { Worker, isMainThread } = require('worker_threads');
+
+if (isMainThread) {
+
+    for (let index = 0; index < numWorkers; index++) {
+        const worker = new Worker(__filename);
+
     }
-    
-    cluster.on('exit', function (worker, code, signal) {
-        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
-        console.log('Starting a new worker');
-        cluster.fork();
-    });
 } else {
     app()
 }

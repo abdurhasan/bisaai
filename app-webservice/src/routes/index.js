@@ -2,15 +2,15 @@ const mquery = require('mquery')
 const print = console.log
 const isEmpty = require('is-empty')
 
-
+const { Parser } = require('json2csv');
 
 module.exports = function (app, dbs) {
 
-    app.get('/', (req, res) => res.json({ message: 'welcome to Bisa Ai', pid : process.pid }))
+    app.get('/', (req, res) => res.json({ message: 'welcome to Bisa Ai', pid: process.pid }))
 
     app.get('/:collectionDB', async (req, res) => {
         const { collectionDB } = req.params
-        let { select, skip, limit, search, equal, gte, gt, lte, lt, like } = req.query
+        let { select, skip, limit, search, equal, gte, gt, lte, lt, like, csv } = req.query
 
         select = isEmpty(select) ? {} : select.replace(/,/g, ' ')
         search = isEmpty(search) ? {} : search.trim()
@@ -37,10 +37,30 @@ module.exports = function (app, dbs) {
 
         const rows = await Query.find(searchRes).skip(skip).limit(limit).select(select)
 
-        res.json(rows)
+
+
+        if (rows && csv) {
+            const fields = Object.keys(rows[0])
+            const opts = { fields };
+            const parser = new Parser(opts);
+            const csv = parser.parse(rows);
+
+            res.setHeader('Content-Type', 'text/csv');
+            res.end(csv)
+        } else {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(rows))
+        }
+
+
+
+
+
 
 
     })
+
+
 
     app.post('/labeling', async (req, res) => {
         const ids = []

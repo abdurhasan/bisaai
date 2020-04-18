@@ -4,13 +4,11 @@ const numWorkers = require('os').cpus().length;
 
 
 if (cluster.isMaster) {
-    for (let i = 0; i < numWorkers; i++) {
+    for (let i = 1; i < numWorkers -1; i++) {
         cluster.fork();
     }
 
-    cluster.on('online', function (worker) {
-        console.log('Worker ' + worker.process.pid + ' is online');
-    });
+    
 
     cluster.on('exit', function (worker, code, signal) {
         console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
@@ -20,3 +18,4 @@ if (cluster.isMaster) {
 } else {
     server()
 }
+
