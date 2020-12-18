@@ -20,7 +20,7 @@
     "jsonexport": "^2.4.1",
     "module-alias": "^2.2.2",
     "mongodb": "^3.5.5",
-    "mquery": "^3.2.2"
+    "mquery": "^3.2.3"
   },
   "engines": {
     "node": "8.x"
